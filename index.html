@@ -288,7 +288,6 @@
             line-height: 1.6;
         }
         
-        /* --- ADDED THIS RULE FOR BULLET POINTS --- */
         .project-card ul {
             color: #6b7280;
             margin-bottom: 1.5rem;
@@ -327,6 +326,15 @@
         .project-links a:hover {
             color: #1d4ed8;
         }
+        
+        /* --- ADDED THIS RULE TO RE-POSITION THE 3RD CARD --- */
+        .projects-grid .project-card:nth-child(3) {
+            grid-column: 1 / -1;   /* Makes this card span the full grid width */
+            justify-self: center;  /* Centers the card within the grid area */
+            max-width: 500px;      /* Sets a max-width (adjust as needed) */
+            width: 100%;           
+        }
+
 
         /* Contact Section */
         .contact-content {
