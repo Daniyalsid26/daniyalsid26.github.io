@@ -253,7 +253,8 @@
         /* Projects Section */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            /* --- CHANGED THIS LINE --- */
+            grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
         }
 
@@ -288,6 +289,7 @@
             line-height: 1.6;
         }
         
+        /* --- ADDED THIS RULE FOR BULLET POINTS --- */
         .project-card ul {
             color: #6b7280;
             margin-bottom: 1.5rem;
@@ -326,15 +328,6 @@
         .project-links a:hover {
             color: #1d4ed8;
         }
-        
-        /* --- ADDED THIS RULE TO RE-POSITION THE 3RD CARD --- */
-        .projects-grid .project-card:nth-child(3) {
-            grid-column: 1 / -1;   /* Makes this card span the full grid width */
-            justify-self: center;  /* Centers the card within the grid area */
-            max-width: 500px;      /* Sets a max-width (adjust as needed) */
-            width: 100%;           
-        }
-
 
         /* Contact Section */
         .contact-content {
@@ -420,6 +413,11 @@
             .section {
                 padding: 3rem 1rem;
             }
+
+            /* --- ADDED THIS RULE --- */
+            .projects-grid {
+                grid-template-columns: 1fr; /* Stacks projects on mobile */
+            }
         }
 
         /* Smooth animations */
@@ -462,7 +460,7 @@
                 </p>
                 <div class="cta-buttons">
                     <a href="#about" class="btn btn-primary">Learn More</a>
-                    <a href="#projects" class="btn btn-secondary">View Projects</a>
+                    <a href="#projects" classs="btn btn-secondary">View Projects</a>
                 </div>
             </div>
             <div class="hero-contact">
@@ -599,8 +597,27 @@
                 </div>
             </div>
 
+            <div class="project-card">
+                <div class="project-header">
+                    <h3>New Project Title</h3>
+                    <ul>
+                        <li>Your project description point 1.</li>
+                        <li>Your project description point 2.</li>
+                        <li>Your project description point 3.</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span class="tag">Tag 1</span>
+                        <span class="tag">Tag 2</span>
+                        <span class="tag">Tag 3</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" target="_blank">View Project →</a>
+                        <a href="#" target="_blank">GitHub →</a>
+                    </div>
+                </div>
             </div>
-    </section>
+
+        </div> </section>
 
     <footer>
         <p>&copy; 2025 Muhammad Danial</p>
