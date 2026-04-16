@@ -184,8 +184,8 @@
             padding: 0 2.5rem;
         }
 
-        .section { padding: 5rem 0; }
-        .section:first-child { padding-top: 4rem; }
+        .section { padding: 2rem 0; }
+        .section:first-child { padding-top: 2rem; }
 
         .section-label {
             font-family: 'Playfair Display', serif;
@@ -193,7 +193,7 @@
             text-transform: uppercase;
             letter-spacing: 0.2em;
             color: var(--gold);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.4rem;
             display: block;
         }
 
@@ -202,7 +202,7 @@
             font-size: 2rem;
             font-weight: 500;
             color: var(--star-white);
-            margin-bottom: 1.75rem;
+            margin-bottom: 1rem;
             line-height: 1.25;
         }
 
@@ -210,14 +210,14 @@
             width: 48px;
             height: 1px;
             background: linear-gradient(90deg, var(--gold), transparent);
-            margin: 3rem 0;
+            margin: 1.25rem 0;
         }
 
         /* ── Hero Text ── */
         .hero-intro {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            line-height: 1.8;
+            line-height: 1.7;
             max-width: 580px;
         }
 
@@ -233,7 +233,7 @@
             color: var(--text-secondary);
         }
 
-        .about-text p { margin-bottom: 1.25rem; }
+        .about-text p { margin-bottom: 0.75rem; }
 
         .about-text strong {
             color: var(--star-white);
@@ -251,7 +251,7 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 10px;
-            padding: 1.25rem;
+            padding: 1rem;
             backdrop-filter: blur(8px);
             transition: all 0.35s ease;
         }
@@ -297,9 +297,9 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 1.75rem;
             backdrop-filter: blur(8px);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             transition: all 0.35s ease;
         }
 
@@ -485,11 +485,11 @@
             }
 
             .section {
-                padding: 2.5rem 0;
+                padding: 1.5rem 0;
             }
 
             .section:first-child {
-                padding-top: 1.5rem;
+                padding-top: 1.25rem;
             }
 
             .section-title {
@@ -522,7 +522,7 @@
             }
 
             .divider {
-                margin: 2rem 0;
+                margin: 1rem 0;
             }
         }
 
@@ -568,11 +568,10 @@
         <aside class="sidebar">
             <div class="sidebar-top">
                 <h1 class="sidebar-name">Daniyal<br>Siddiqui</h1>
-                <p class="sidebar-role">AI Research Developer</p>
+                <p class="sidebar-role">AI Research Developer / Mechanical Engineer</p>
 
                 <ul class="sidebar-nav">
                     <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -617,41 +616,17 @@
         <main class="main">
             <div class="content">
 
-                <!-- Home -->
+                <!-- Home + About -->
                 <section id="home" class="section">
                     <span class="section-label fade-in">Hello, I'm</span>
                     <h2 class="section-title fade-in" style="font-size:2.5rem;">Daniyal <em style="color:var(--gold)">Siddiqui</em></h2>
                     <p class="hero-intro fade-in">
-                        AI Research Developer building intelligent systems — from <strong>agentic workflows</strong>
-                        and <strong>formal verification</strong> to production ML serving <strong>150k+ users</strong>.
-                        Previously automated 70% of data processing and uncovered 30+ fault patterns
-                        for 600 vehicles using unsupervised learning at Tata Technologies.
+                        AI Research Developer &amp; Mechanical Engineer — <strong>ML workflows</strong>, <strong>data automation</strong> and <strong>sustainability</strong>. Production systems serving <strong>150k+ users</strong>, hackathon winner, 3+ years shipping AI.
                     </p>
-                    <div class="divider"></div>
-                </section>
-
-                <!-- About -->
-                <section id="about" class="section">
-                    <span class="section-label fade-in">About</span>
-                    <h2 class="section-title fade-in">Building at the intersection of<br>AI research &amp; engineering</h2>
-                    <div class="about-text fade-in">
-                        <p>
-                            I'm a developer with <strong>3+ years</strong> specialising in AI, Machine Learning and Data Science —
-                            building intelligent systems that solve real-world problems. My expertise spans machine learning,
-                            natural language processing and building agentic AI workflows, with a focus on deploying
-                            <strong>scalable, production-ready solutions</strong>.
-                        </p>
-                        <p>
-                            I have a strong background in Python including frameworks such as <strong>LangChain/LangGraph</strong> and
-                            <strong>PyTorch</strong>. I'm passionate about staying current with the latest developments in AI research
-                            including new methods of Prompt Engineering and AI deployment, and I enjoy collaborating with
-                            cross-functional teams to bring AI innovations from concept to deployment.
-                        </p>
-                    </div>
 
                     <div class="divider"></div>
 
-                    <span class="section-label fade-in">Expertise</span>
+                    <span class="section-label fade-in" id="about">Expertise</span>
                     <div class="skills-grid fade-in">
                         <div class="skill-item">
                             <h3>Machine Learning</h3>
@@ -679,9 +654,7 @@
                         </div>
                     </div>
 
-                    <div class="divider"></div>
-
-                    <span class="section-label fade-in">Tech Stack</span>
+                    <span class="section-label fade-in" style="margin-top:1.25rem;">Tech Stack</span>
                     <div class="stack-tags fade-in">
                         <span class="stack-tag">Python</span>
                         <span class="stack-tag">SQL</span>
@@ -701,6 +674,29 @@
                 <section id="projects" class="section">
                     <span class="section-label fade-in">Selected Work</span>
                     <h2 class="section-title fade-in">Projects</h2>
+
+                    <div class="project-card fade-in">
+                        <h3>AgentCommerce — Agentic AI Hackathon Winner, 2026</h3>
+                        <ul>
+                            <li>Built a decentralized e-commerce platform merging AI agents with Web3 and Hedera blockchain.</li>
+                            <li>Engineered an AI shopping agent: users type "buy batteries" and the agent autonomously searches inventory, finds the lowest price, and processes real HBAR cryptocurrency payments.</li>
+                            <li>Built a Shopify plugin enabling any vendor to opt in with one click — catalogue published to a decentralized registry instantly.</li>
+                            <li>Transactions immutably recorded on-chain, with orders submitted back to Shopify for fulfilment.</li>
+                        </ul>
+                        <div class="project-tags">
+                            <span class="tag">Node.js</span>
+                            <span class="tag">Express</span>
+                            <span class="tag">Hedera SDK</span>
+                            <span class="tag">HBAR</span>
+                            <span class="tag">Shopify</span>
+                            <span class="tag">Agentic AI</span>
+                            <span class="tag">x402</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/Daniyalsid26/agentic-ai-hack" target="_blank">GitHub →</a>
+                            <a href="blog/hackathon.html">Blog Post →</a>
+                        </div>
+                    </div>
 
                     <div class="project-card fade-in">
                         <h3>Recommendation System — VEChain GreenCart, 2025</h3>
