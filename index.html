@@ -532,88 +532,6 @@
             }
         }
 
-        /* ── DanGPT inline chat section ── */
-        .dangpt-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(212, 168, 67, 0.3);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .dangpt-messages {
-            padding: 1.25rem;
-            min-height: 260px;
-            max-height: 380px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--night-glow) transparent;
-        }
-        .dg-msg {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 0.875rem;
-            line-height: 1.55;
-        }
-        .dg-user {
-            align-self: flex-end;
-            background: var(--night-glow);
-            color: var(--star-white);
-            border: 1px solid rgba(212, 168, 67, 0.25);
-            border-bottom-right-radius: 3px;
-        }
-        .dg-bot {
-            align-self: flex-start;
-            background: var(--night-soft);
-            color: var(--text-secondary);
-            border-bottom-left-radius: 3px;
-        }
-        .dg-typing {
-            align-self: flex-start;
-            background: var(--night-soft);
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border-bottom-left-radius: 3px;
-        }
-        .dangpt-input-row {
-            display: flex;
-            gap: 8px;
-            padding: 12px;
-            border-top: 1px solid rgba(212, 168, 67, 0.2);
-            background: rgba(11, 16, 38, 0.4);
-        }
-        #dangpt-input {
-            flex: 1;
-            background: var(--night-mid);
-            border: 1px solid rgba(212, 168, 67, 0.18);
-            border-radius: 8px;
-            padding: 9px 14px;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        #dangpt-input:focus { border-color: var(--gold-dim); }
-        #dangpt-input::placeholder { color: var(--text-muted); }
-        #dangpt-send {
-            background: var(--gold);
-            color: var(--night-deep);
-            border: none;
-            border-radius: 8px;
-            padding: 9px 18px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        #dangpt-send:hover { background: var(--gold-light); }
-        #dangpt-send:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -657,7 +575,6 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a href="#chat">Chat</a></li>
                 </ul>
 
                 <div class="sidebar-details">
@@ -824,22 +741,6 @@
                 </section>
 
                 <!-- Contact -->
-                <section id="chat" class="section">
-                    <span class="section-label fade-in">AI Assistant</span>
-                    <h2 class="section-title fade-in">Ask <em style="color:var(--gold)">DanGPT</em></h2>
-                    <p class="fade-in" style="color:var(--text-secondary);margin-bottom:1.25rem;font-size:0.9rem;">
-                        Powered by Llama 3.1 &amp; RAG — ask me anything about Daniyal's background, projects, or skills.
-                    </p>
-                    <div class="dangpt-card fade-in">
-                        <div class="dangpt-messages" id="dangpt-messages">
-                            <div class="dg-msg dg-bot">Hi! I'm DanGPT. Ask me anything about Daniyal's skills, projects, or experience.</div>
-                        </div>
-                        <div class="dangpt-input-row">
-                            <input type="text" id="dangpt-input" placeholder="e.g. What projects has Daniyal built?" maxlength="400" />
-                            <button id="dangpt-send">Send</button>
-                        </div>
-                    </div>
-                </section>
 
                 <section id="contact" class="section">
                     <span class="section-label fade-in">Get In Touch</span>
@@ -985,64 +886,268 @@
 
     </script>
 
+<!-- DanGPT Widget -->
+<style>
+  #dg-trigger {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #111a3a;
+    border: 1.5px solid rgba(212,168,67,0.55);
+    border-radius: 40px;
+    padding: 11px 20px 11px 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.45);
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  #dg-trigger:hover {
+    background: #19274d;
+    border-color: rgba(212,168,67,0.85);
+    box-shadow: 0 6px 30px rgba(212,168,67,0.18);
+  }
+  #dg-trigger-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  #dg-trigger-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.3;
+  }
+  #dg-trigger-text span:first-child {
+    font-size: 12px;
+    color: #9ca3b8;
+    font-weight: 400;
+  }
+  #dg-trigger-text span:last-child {
+    font-size: 13.5px;
+    color: #d4a843;
+    font-weight: 600;
+  }
+  #dg-box {
+    display: none;
+    position: fixed;
+    bottom: 110px;
+    right: 28px;
+    z-index: 1000;
+    width: 380px;
+    max-height: 540px;
+    background: #0e1530;
+    border: 1.5px solid rgba(212,168,67,0.3);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  #dg-box.open { display: flex; }
+  #dg-header {
+    background: #111a3a;
+    border-bottom: 1px solid rgba(212,168,67,0.18);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #dg-header-left { display: flex; flex-direction: column; gap: 2px; }
+  #dg-header-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #d4a843;
+  }
+  #dg-header-sub {
+    font-size: 11.5px;
+    color: #6b7490;
+    font-weight: 400;
+  }
+  #dg-close {
+    cursor: pointer;
+    color: #6b7490;
+    font-size: 18px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  #dg-close:hover { color: #e8c96a; }
+  #dg-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 220px;
+    max-height: 360px;
+    scrollbar-width: thin;
+    scrollbar-color: #1e3a6e transparent;
+  }
+  .dg-msg {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .dg-user {
+    align-self: flex-end;
+    background: #1e3a6e;
+    color: #e8e6e1;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-bottom-right-radius: 3px;
+  }
+  .dg-bot {
+    align-self: flex-start;
+    background: #19274d;
+    color: #9ca3b8;
+    border-bottom-left-radius: 3px;
+  }
+  .dg-typing {
+    align-self: flex-start;
+    background: #19274d;
+    color: #6b7490;
+    font-size: 12.5px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border-bottom-left-radius: 3px;
+  }
+  #dg-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(212,168,67,0.15);
+    background: rgba(11,16,38,0.5);
+  }
+  #dg-input {
+    flex: 1;
+    background: #111a3a;
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 8px;
+    padding: 9px 13px;
+    color: #e8e6e1;
+    font-size: 13px;
+    font-family: 'Inter', system-ui, sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #dg-input:focus { border-color: #a07c2e; }
+  #dg-input::placeholder { color: #6b7490; }
+  #dg-send {
+    background: #d4a843;
+    color: #0b1026;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  #dg-send:hover { background: #e8c96a; }
+  #dg-send:disabled { opacity: 0.45; cursor: not-allowed; }
+  @media (max-width: 480px) {
+    #dg-box { width: calc(100vw - 32px); right: 16px; bottom: 100px; }
+    #dg-trigger { right: 16px; bottom: 16px; padding: 10px 16px 10px 13px; }
+  }
+</style>
+
+<button id="dg-trigger" aria-label="Open DanGPT chat">
+  <span id="dg-trigger-icon">💬</span>
+  <span id="dg-trigger-text">
+    <span>Have any questions?</span>
+    <span>Ask DanGPT, Daniyal's RAG Agent</span>
+  </span>
+</button>
+
+<div id="dg-box" role="dialog" aria-label="DanGPT chat">
+  <div id="dg-header">
+    <div id="dg-header-left">
+      <span id="dg-header-title">DanGPT</span>
+      <span id="dg-header-sub">Daniyal's personal RAG assistant</span>
+    </div>
+    <span id="dg-close" aria-label="Close">✕</span>
+  </div>
+  <div id="dg-messages">
+    <div class="dg-msg dg-bot">Hi! I'm DanGPT — ask me anything about Daniyal's skills, projects, or experience.</div>
+  </div>
+  <div id="dg-input-row">
+    <input id="dg-input" type="text" placeholder="e.g. What has Daniyal built?" maxlength="400" />
+    <button id="dg-send">Send</button>
+  </div>
+</div>
+
 <script>
-  (function () {
-    const BACKEND_URL = "https://dangpt-mfqa.onrender.com/chat";
-    const input  = document.getElementById("dangpt-input");
-    const send   = document.getElementById("dangpt-send");
-    const msgs   = document.getElementById("dangpt-messages");
+(function () {
+  const BACKEND_URL = "https://dangpt-mfqa.onrender.com/chat";
+  const trigger = document.getElementById("dg-trigger");
+  const box     = document.getElementById("dg-box");
+  const close   = document.getElementById("dg-close");
+  const input   = document.getElementById("dg-input");
+  const send    = document.getElementById("dg-send");
+  const msgs    = document.getElementById("dg-messages");
+  let open = false;
 
-    function appendMessage(text, role) {
-      const el = document.createElement("div");
-      el.className = "dg-msg " + (role === "user" ? "dg-user" : "dg-bot");
-      el.textContent = text;
-      msgs.appendChild(el);
-      msgs.scrollTop = msgs.scrollHeight;
+  trigger.addEventListener("click", () => {
+    open = !open;
+    box.classList.toggle("open", open);
+    if (open) { input.focus(); trigger.style.display = "none"; }
+  });
+  close.addEventListener("click", () => {
+    open = false;
+    box.classList.remove("open");
+    trigger.style.display = "flex";
+  });
+
+  function appendMsg(text, role) {
+    const el = document.createElement("div");
+    el.className = "dg-msg " + (role === "user" ? "dg-user" : "dg-bot");
+    el.textContent = text;
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+  function appendTyping() {
+    const el = document.createElement("div");
+    el.className = "dg-typing";
+    el.textContent = "Thinking…";
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+    return el;
+  }
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    send.disabled = true;
+    appendMsg(text, "user");
+    const t = appendTyping();
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+      t.remove();
+      if (res.status === 429) appendMsg("Too many messages — wait a moment and try again.", "bot");
+      else if (!res.ok)        appendMsg("Something went wrong. Please try again.", "bot");
+      else                     appendMsg((await res.json()).reply, "bot");
+    } catch {
+      t.remove();
+      appendMsg("Could not reach DanGPT. The server may be warming up — try again in 30 seconds.", "bot");
+    } finally {
+      send.disabled = false;
+      input.focus();
     }
-
-    function appendTyping() {
-      const el = document.createElement("div");
-      el.className = "dg-typing";
-      el.textContent = "Thinking…";
-      msgs.appendChild(el);
-      msgs.scrollTop = msgs.scrollHeight;
-      return el;
-    }
-
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
-      input.value = "";
-      send.disabled = true;
-      appendMessage(text, "user");
-      const typingEl = appendTyping();
-      try {
-        const res = await fetch(BACKEND_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text }),
-        });
-        typingEl.remove();
-        if (res.status === 429) {
-          appendMessage("You're sending messages too fast. Please wait a moment.", "bot");
-        } else if (!res.ok) {
-          appendMessage("Something went wrong. Please try again.", "bot");
-        } else {
-          const data = await res.json();
-          appendMessage(data.reply, "bot");
-        }
-      } catch (e) {
-        typingEl.remove();
-        appendMessage("Could not reach DanGPT. The server may be warming up — try again in 30 seconds.", "bot");
-      } finally {
-        send.disabled = false;
-        input.focus();
-      }
-    }
-
-    send.addEventListener("click", sendMessage);
-    input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
-  })();
+  }
+  send.addEventListener("click", sendMessage);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+})();
 </script>
 </body>
 </html>
