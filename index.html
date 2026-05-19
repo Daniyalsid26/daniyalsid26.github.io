@@ -1093,6 +1093,7 @@
   const send    = document.getElementById("dg-send");
   const msgs    = document.getElementById("dg-messages");
   let open = false;
+  let history = []; // conversation history [{role, content}, ...]
 
   trigger.addEventListener("click", () => {
     open = !open;
@@ -1131,12 +1132,21 @@
       const res = await fetch(BACKEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history }),
       });
       t.remove();
-      if (res.status === 429) appendMsg("Too many messages — wait a moment and try again.", "bot");
-      else if (!res.ok)        appendMsg("Something went wrong. Please try again.", "bot");
-      else                     appendMsg((await res.json()).reply, "bot");
+      if (res.status === 429) {
+        appendMsg("Too many messages — wait a moment and try again.", "bot");
+      } else if (!res.ok) {
+        appendMsg("Something went wrong. Please try again.", "bot");
+      } else {
+        const reply = (await res.json()).reply;
+        appendMsg(reply, "bot");
+        // Update history (keep last 6 turns = 3 exchanges)
+        history.push({ role: "user", content: text });
+        history.push({ role: "assistant", content: reply });
+        if (history.length > 12) history = history.slice(-12);
+      }
     } catch {
       t.remove();
       appendMsg("Could not reach DanGPT. The server may be warming up — try again in 30 seconds.", "bot");
