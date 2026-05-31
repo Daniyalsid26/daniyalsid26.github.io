@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building DanGPT: My AI Clone that Went to the Pub — Daniyal Siddiqui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --night-deep: #0b1026;
+            --night-mid: #111a3a;
+            --night-soft: #19274d;
+            --night-glow: #1e3a6e;
+            --gold: #d4a843;
+            --gold-light: #e8c96a;
+            --gold-dim: #a07c2e;
+            --star-white: #e8e6e1;
+            --text-primary: #e8e6e1;
+            --text-secondary: #9ca3b8;
+            --text-muted: #6b7490;
+            --card-bg: rgba(17, 26, 58, 0.6);
+            --card-border: rgba(212, 168, 67, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--night-deep);
+            overflow-x: hidden;
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Blog Layout ── */
+        .blog-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .blog-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2.5rem;
+            background: rgba(11, 16, 38, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.08);
+        }
+
+        .blog-nav-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .blog-nav-back {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.825rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .blog-nav-back:hover { color: var(--gold-light); }
+
+        .blog-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+        }
+
+        /* ── Post Header ── */
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .post-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid rgba(212, 168, 67, 0.25);
+            color: var(--gold-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 600;
+            color: var(--star-white);
+            line-height: 1.25;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .post-divider {
+            width: 48px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            margin: 2.5rem 0;
+        }
+
+        /* ── Post Body ── */
+        .post-body h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--star-white);
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .post-body p {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .post-body strong {
+            color: var(--star-white);
+            font-weight: 500;
+        }
+
+        .post-body em {
+            color: var(--gold-light);
+            font-style: italic;
+        }
+
+        /* ── Highlight Box ── */
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-left: 3px solid var(--gold);
+            border-radius: 8px;
+            padding: 1.5rem 1.75rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(8px);
+        }
+
+        .highlight-box p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 0;
+        }
+
+        .highlight-box p:not(:last-child) {
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Tech Tags ── */
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .post-tag {
+            background: rgba(212, 168, 67, 0.08);
+            border: 1px solid rgba(212, 168, 67, 0.15);
+            color: var(--gold-light);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.775rem;
+            font-weight: 400;
+        }
+
+        /* ── Author Card ── */
+        .author-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .author-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--night-deep);
+            flex-shrink: 0;
+        }
+
+        .author-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--star-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .author-info a {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.825rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .author-info a:hover { color: var(--gold-light); }
+
+        /* ── Fade-in ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 680px) {
+            .blog-nav { padding: 0.75rem 1.25rem; }
+            .blog-container { padding: 2.5rem 1.25rem 4rem; }
+            .post-title { font-size: 1.75rem; }
+            .post-subtitle { font-size: 1rem; }
+            .post-body h2 { font-size: 1.2rem; }
+            .author-card { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <div class="blog-wrapper">
+        <nav class="blog-nav">
+            <a href="../index.html" class="blog-nav-name">Daniyal Siddiqui</a>
+            <a href="../index.html#projects" class="blog-nav-back">← Back to home</a>
+        </nav>
+
+        <article class="blog-container">
+
+            <div class="post-meta fade-in">
+                <span class="post-date">May 2026</span>
+                <span class="post-badge">🤖 RAG Architecture</span>
+            </div>
+
+            <h1 class="post-title fade-in">Building DanGPT: An AI Clone That Went to the Pub</h1>
+
+            <p class="post-subtitle fade-in">
+                I set out to build an AI version of my CV as a fun experiment. Then I took it to the pub, and it failed hilariously. Here’s how I rebuilt it from the ground up to handle the chaos of human conversation.
+            </p>
+
+            <div class="post-divider"></div>
+
+            <div class="post-body">
+                <h2 class="fade-in">The Idea & The Stack</h2>
+                <p class="fade-in">
+                    It started as a simple idea: <em>Why send a static PDF resume when I could send an interactive AI version of myself?</em> The traditional job application process is inherently dry. You send a piece of paper, wait for a human to parse the bullet points, and hope they understand the nuance of your engineering decisions. I wanted to build DanGPT to see how far I could push a Retrieval-Augmented Generation (RAG) system with my own professional history.
+                </p>
+                <div class="highlight-box fade-in">
+                    <p><strong>The Foundation:</strong></p>
+                    <p>• FastAPI backend for the core service</p>
+                    <p>• Groq inference engine running <code>llama-3.1-8b-instant</code></p>
+                    <p>• <code>fastembed</code> for blazing-fast local dense vectors</p>
+                </div>
+                <p class="fade-in">
+                    From day one, the architecture was built for speed. If a recruiter asks a question, the response needs to feel instant. I chose Groq to run Llama 3.1 because the sub-second latency delivers an absolute <em>wow</em> factor, and the API costs are incredibly cheap—essential for a side project. I wired this up to a FastAPI backend to handle the requests. 
+                </p>
+                <p class="fade-in">
+                    At first, development was smooth. I asked it about my skills, my Master's degree, and my project architectures. It nailed every single question. Thinking I had built a masterpiece, hubris set in. I went to the pub, ordered a pint, and proudly handed my phone to my friends.
+                </p>
+
+                <div class="post-divider"></div>
+
+                <h2 class="fade-in">The "Oops" Moment</h2>
+                <p class="fade-in">
+                    I had tested the system using the exact phrasing and cadence that <em>I</em> use. My friends, however, didn't care about my rigid testing parameters. They asked weird, highly contextual, conversational things. They challenged the bot. They asked multi-part questions spanning different jobs. 
+                </p>
+                <p class="fade-in">
+                    DanGPT instantly fell apart. It started hallucinating skills I didn't even have. It lost track of the timeline. It worked perfectly for me, but it failed the reality test. It was a stark reminder of a core engineering truth: as you scale a system up to face real users, the complexity of edge cases scales exponentially. A working script is not a robust system.
+                </p>
+
+                <div class="post-divider"></div>
+
+                <h2 class="fade-in">Fixing the Core: STAR Chunking & Custom BM25</h2>
+                <p class="fade-in">
+                    I went back to the drawing board to figure out <em>why</em> it hallucinated. The culprit was my chunking strategy. I had been using a standard, blind sliding-window approach. This meant that halfway through explaining a complex machine learning project, the chunk would just cut off. The model was receiving the "Action" in one chunk, and the "Result" in another. No wonder it couldn't piece the story together for my friends.
+                </p>
+                <p class="fade-in">
+                    Through sheer trial and error, I threw out the sliding window. I rewrote the chunking logic to split my data explicitly by logical boundaries, targeting the STAR (Situation, Task, Action, Result) format. By ensuring every chunk was a self-contained narrative, the LLM finally had the proper context.
+                </p>
+                <p class="fade-in">
+                    But retrieving those chunks required a better search engine. I wanted a hybrid search (combining dense vector similarity with sparse keyword matching). The standard industry reflex is to haul in heavy infrastructure like Pinecone or Elasticsearch. I rejected that to keep the system lightweight and zero-dependency. 
+                </p>
+                <p class="fade-in">
+                    Instead, I implemented a custom Okapi BM25 class entirely in Python. This gave me absolute, surgical control over the tokenization logic. At this point, I was essentially vibecoding the solution—bouncing between reading research papers and deep-diving Reddit to piece the architecture together. I paired this custom BM25 scorer with the dense vectors generated locally by <code>fastembed</code>. The result is a hyper-efficient hybrid search that runs entirely in a single FastAPI process—no external vector databases required. 
+                </p>
+
+                <div class="post-divider"></div>
+
+                <h2 class="fade-in">Defending the Clone</h2>
+                <p class="fade-in">
+                    My friends at the pub proved another point: people will absolutely try to break an AI model if you put it in front of them. Realizing that random internet users could bankrupt my API token limits or trick my AI clone into generating embarrassing responses, I had to build a defense mechanism.
+                </p>
+                <p class="fade-in">
+                    I wrote preemptive injection detection logic right into the FastAPI layer. Before the LLM ever sees a prompt, the system scans the input for Base64 encodings and typoglycemia (spaced-out or scrambled trigger words). If you try to tell DanGPT to "ignore all previous instructions", it catches it and simply shuts down the request.
+                </p>
+                
+                <div class="post-divider"></div>
+
+                <h2 class="fade-in">What's Next?</h2>
+                <p class="fade-in">
+                    DanGPT is live, and it's doing exactly what I built it to do. It’s a quirky, highly technical, and completely interactive showcase of my engineering skills. But it’s not entirely feature-complete. 
+                </p>
+                <p class="fade-in">
+                    My next goal is to enhance it by adding robust context-aware systems. Right now, it answers questions excellently in isolation, but I want to give it deeper agentic memory so it can track the flow of a multi-turn interview conversation over time. I'm working on that architecture right now.
+                </p>
+
+                <div class="post-divider"></div>
+
+                <h2 class="fade-in">Conclusion</h2>
+                <p class="fade-in">
+                    Building DanGPT was an exercise in turning an abstract idea into a robust, production-ready system. This was incredibly fun, 10/10 will do it again. Reach out if you want to build something cool.
+                </p>
+
+                <div class="post-tags fade-in">
+                    <span class="post-tag">RAG</span>
+                    <span class="post-tag">FastAPI</span>
+                    <span class="post-tag">Groq</span>
+                    <span class="post-tag">Llama 3.1</span>
+                    <span class="post-tag">fastembed</span>
+                    <span class="post-tag">Okapi BM25</span>
+                    <span class="post-tag">Python</span>
+                </div>
+            </div>
+
+            <!-- ── Author ── -->
+            <div class="author-card fade-in">
+                <div class="author-avatar">DS</div>
+                <div class="author-info">
+                    <h3>Daniyal Siddiqui</h3>
+                    <p>AI Research Developer — building intelligent systems from agentic workflows to production ML.</p>
+                    <a href="mailto:daniyalsid26@gmail.com">Get in touch →</a>
+                </div>
+            </div>
+
+        </article>
+    </div>
+
+    <script>
+        // ── Starry Night Canvas ──
+        (function () {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [], swirls = [];
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight * 3;
+            }
+
+            function createStars(count) {
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        r: Math.random() * 1.4 + 0.3,
+                        alpha: Math.random() * 0.6 + 0.2,
+                        pulse: Math.random() * 0.02 + 0.005,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            function createSwirls(count) {
+                swirls = [];
+                for (let i = 0; i < count; i++) {
+                    swirls.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h * 0.6,
+                        rx: Math.random() * 180 + 80,
+                        ry: Math.random() * 40 + 15,
+                        angle: Math.random() * Math.PI * 2,
+                        speed: (Math.random() - 0.5) * 0.0004,
+                        alpha: Math.random() * 0.04 + 0.01
+                    });
+                }
+            }
+
+            let time = 0;
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                time += 0.01;
+
+                swirls.forEach(s => {
+                    s.angle += s.speed;
+                    ctx.save();
+                    ctx.translate(s.x, s.y);
+                    ctx.rotate(s.angle);
+                    const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, s.rx);
+                    grd.addColorStop(0, `rgba(30, 58, 110, ${s.alpha * 1.5})`);
+                    grd.addColorStop(0.5, `rgba(212, 168, 67, ${s.alpha * 0.5})`);
+                    grd.addColorStop(1, 'rgba(11, 16, 38, 0)');
+                    ctx.fillStyle = grd;
+                    ctx.scale(1, s.ry / s.rx);
+                    ctx.beginPath();
+                    ctx.arc(0, 0, s.rx, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                stars.forEach(s => {
+                    const flicker = Math.sin(time * 3 + s.phase) * s.pulse;
+                    const a = Math.max(0.05, s.alpha + flicker);
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(232, 230, 225, ${a})`;
+                    ctx.fill();
+                    if (s.r > 1) {
+                        ctx.beginPath();
+                        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(212, 168, 67, ${a * 0.12})`;
+                        ctx.fill();
+                    }
+                });
+
+                requestAnimationFrame(draw);
+            }
+
+            function init() {
+                resize();
+                createStars(260);
+                createSwirls(6);
+                draw();
+            }
+
+            window.addEventListener('resize', () => { resize(); createStars(260); createSwirls(6); });
+            init();
+        })();
+
+        // ── Fade-in on scroll ──
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.12 }
+        );
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
