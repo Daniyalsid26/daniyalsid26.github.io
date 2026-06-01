@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building DanGPT: My AI Clone that Went to the Pub — Daniyal Siddiqui</title>
+    <title>Building DanGPT: My AI Clone that Went to the Pub - Daniyal Siddiqui</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
@@ -313,7 +313,7 @@
             <div class="post-body">
                 <h2 class="fade-in">The Idea & The Stack</h2>
                 <p class="fade-in">
-                    It started as a simple idea: <em>Why send a static PDF resume when I could send an interactive AI version of myself?</em> The traditional job application process is inherently dry. You send a piece of paper, wait for a human to parse the bullet points, and hope they understand the nuance of your engineering decisions. I wanted to build DanGPT to see how far I could push a Retrieval-Augmented Generation (RAG) system with my own professional history.
+                    It started as a simple idea: <em>As an AI developer, why send a static PDF resume when I could send an interactive AI version of myself?</em> The traditional job application process is inherently dry. You send a piece of paper, wait for a human to parse the bullet points, and hope they understand the nuance of your engineering decisions. I wanted to build DanGPT to see how far I could push a Retrieval-Augmented Generation (RAG) system with my own professional history.
                 </p>
                 <div class="highlight-box fade-in">
                     <p><strong>The Foundation:</strong></p>
@@ -322,20 +322,20 @@
                     <p>• <code>fastembed</code> for blazing-fast local dense vectors</p>
                 </div>
                 <p class="fade-in">
-                    From day one, the architecture was built for speed. If a recruiter asks a question, the response needs to feel instant. I chose Groq to run Llama 3.1 because the sub-second latency delivers an absolute <em>wow</em> factor, and the API costs are incredibly cheap—essential for a side project. I wired this up to a FastAPI backend to handle the requests. 
+                    From day one, the architecture was built for speed. If a recruiter asks a question, the response needs to feel instant. I chose Groq to run Llama 3.1 because the sub-second latency delivers the <em>wow</em> factor, and the API costs are incredibly cheap, which is essential for a side project. I wired this up to a FastAPI backend to handle the requests.
                 </p>
                 <p class="fade-in">
-                    At first, development was smooth. I asked it about my skills, my Master's degree, and my project architectures. It nailed every single question. Thinking I had built a masterpiece, hubris set in. I went to the pub, ordered a pint, and proudly handed my phone to my friends.
+                    At first, development was smooth. I asked it about my skills, my Master's degree, and my project architectures. It nailed every single question. Thinking I had built a masterpiece, hubris set in. Then I asked my friends to test it out and it didn't work as planned. I proudly handed my phone to my friends to ask it questions.
                 </p>
 
                 <div class="post-divider"></div>
 
-                <h2 class="fade-in">The "Oops" Moment</h2>
+                <h2 class="fade-in">Not as smooth as I thought</h2>
                 <p class="fade-in">
                     I had tested the system using the exact phrasing and cadence that <em>I</em> use. My friends, however, didn't care about my rigid testing parameters. They asked weird, highly contextual, conversational things. They challenged the bot. They asked multi-part questions spanning different jobs. 
                 </p>
                 <p class="fade-in">
-                    DanGPT instantly fell apart. It started hallucinating skills I didn't even have. It lost track of the timeline. It worked perfectly for me, but it failed the reality test. It was a stark reminder of a core engineering truth: as you scale a system up to face real users, the complexity of edge cases scales exponentially. A working script is not a robust system.
+                    DanGPT fell apart. It started hallucinating skills I didn't even have. It lost track of the timeline. It worked perfectly for me, but it failed the reality test. It was a stark reminder of a core engineering truth: as you scale a system up to face real users, the complexity of edge cases scales exponentially. A working script is not a robust system.
                 </p>
 
                 <div class="post-divider"></div>
@@ -348,30 +348,33 @@
                     Through sheer trial and error, I threw out the sliding window. I rewrote the chunking logic to split my data explicitly by logical boundaries, targeting the STAR (Situation, Task, Action, Result) format. By ensuring every chunk was a self-contained narrative, the LLM finally had the proper context.
                 </p>
                 <p class="fade-in">
-                    But retrieving those chunks required a better search engine. I wanted a hybrid search (combining dense vector similarity with sparse keyword matching). The standard industry reflex is to haul in heavy infrastructure like Pinecone or Elasticsearch. I rejected that to keep the system lightweight and zero-dependency. 
+                    But retrieving those chunks required a better search engine. I wanted a hybrid search (combining dense vector similarity with sparse keyword matching). The standard industry reflex is to haul in heavy infrastructure like Pinecone or Elasticsearch. I rejected that to keep the system lightweight and zero-dependency. Although to improve it, I might add Pinecone, Chroma, or pgvector.
                 </p>
                 <p class="fade-in">
-                    Instead, I implemented a custom Okapi BM25 class entirely in Python. This gave me absolute, surgical control over the tokenization logic. At this point, I was essentially vibecoding the solution—bouncing between reading research papers and deep-diving Reddit to piece the architecture together. I paired this custom BM25 scorer with the dense vectors generated locally by <code>fastembed</code>. The result is a hyper-efficient hybrid search that runs entirely in a single FastAPI process—no external vector databases required. 
+                    Instead, I implemented a custom Okapi BM25 class entirely in Python. This gave me absolute, surgical control over the tokenisation logic. At this point, I was essentially vibecoding the solution, bouncing between reading research papers and deep-diving Reddit to piece the architecture together. I paired this custom BM25 scorer with the dense vectors generated locally by <code>fastembed</code>. The result is a hyper-efficient hybrid search that runs entirely in a single FastAPI process, with no external vector databases required.
                 </p>
 
                 <div class="post-divider"></div>
 
                 <h2 class="fade-in">Defending the Clone</h2>
                 <p class="fade-in">
-                    My friends at the pub proved another point: people will absolutely try to break an AI model if you put it in front of them. Realizing that random internet users could bankrupt my API token limits or trick my AI clone into generating embarrassing responses, I had to build a defense mechanism.
+                    My friends proved another point: people will absolutely try to break an AI model if you put it in front of them. Realising that random internet users could bankrupt my API token limits or trick my AI clone into generating embarrassing responses, I had to build a defence mechanism.
                 </p>
                 <p class="fade-in">
-                    I wrote preemptive injection detection logic right into the FastAPI layer. Before the LLM ever sees a prompt, the system scans the input for Base64 encodings and typoglycemia (spaced-out or scrambled trigger words). If you try to tell DanGPT to "ignore all previous instructions", it catches it and simply shuts down the request.
+                    I wrote preemptive injection detection logic right into the FastAPI layer. Before the LLM ever sees a prompt, the system scans the input for Base64 encodings and typoglycemia (spaced-out or scrambled trigger words). If you try any funny business with DanGPT, it (hopefully) catches it and shuts down the request.
                 </p>
                 
                 <div class="post-divider"></div>
 
                 <h2 class="fade-in">What's Next?</h2>
                 <p class="fade-in">
-                    DanGPT is live, and it's doing exactly what I built it to do. It’s a quirky, highly technical, and completely interactive showcase of my engineering skills. But it’s not entirely feature-complete. 
+                    DanGPT is live, and it's doing what I built it to do. It's a quirky and interactive showcase of my engineering skills. But it's not feature-complete.
                 </p>
                 <p class="fade-in">
                     My next goal is to enhance it by adding robust context-aware systems. Right now, it answers questions excellently in isolation, but I want to give it deeper agentic memory so it can track the flow of a multi-turn interview conversation over time. I'm working on that architecture right now.
+                </p>
+                <p class="fade-in">
+                    To avoid cold start issues over time, I'm running a cron job that keeps the instance warm at peak hours while shutting the instance down during off-peak hours.
                 </p>
 
                 <div class="post-divider"></div>
@@ -397,7 +400,7 @@
                 <div class="author-avatar">DS</div>
                 <div class="author-info">
                     <h3>Daniyal Siddiqui</h3>
-                    <p>AI Research Developer — building intelligent systems from agentic workflows to production ML.</p>
+                    <p>AI Research Developer, building intelligent systems from agentic workflows to production ML.</p>
                     <a href="mailto:daniyalsid26@gmail.com">Get in touch →</a>
                 </div>
             </div>
